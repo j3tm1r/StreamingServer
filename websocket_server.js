@@ -77,32 +77,32 @@ var onTextMessageReceived = function(message, webSocket) {
 		//I'm the sender
 		if (json.rule === PUBLISHER_RULE){
 			switch (json.type) {
-                case 'hello':
-                    streamer = webSocket
-                    publisherDeviceName = json.device
-                    currentQuality = json.current
-                    qualities = []
-                    json.qualities.forEach(function(element, index, array){
-                        var q = element.split("x");
-                        if (q.length != 2){
-                            return;
-                        }
-                        var newQuality = {
-                            width: parseInt(q[0]),
-                            height: parseInt(q[1])
-                        }
-                        qualities.push(newQuality)
-                    })
-                    bitrates = json.bitrates;
-                    currentBitrate = json.currentBitrate;
-                    if (VERBOSE) {
-                        console.log("Hello from publisher '"+json.device+"'\n My resolutions: "+json.qualities);
-                        logAll()
+        case 'hello':
+          streamer = webSocket
+          publisherDeviceName = json.device
+          currentQuality = json.current
+          qualities = []
+          json.qualities.forEach(function(element, index, array){
+                  var q = element.split("x");
+                    if (q.length != 2){
+                      return;
+                  }
+                    var newQuality = {
+                        width: parseInt(q[0]),
+                        height: parseInt(q[1])
                     }
-                    var qualitiesNotice = getQualitiesNoticePacket();
-                    forwardToBrowsers(JSON.stringify(qualitiesNotice));
-                    //forwardToSubscribers(JSON.stringify(qualitiesNotice));
-                    break;
+                    qualities.push(newQuality)
+                })
+          bitrates = json.bitrates;
+          currentBitrate = json.currentBitrate;
+          if (VERBOSE) {
+              console.log("Hello from publisher '"+json.device+"'\n My resolutions: "+json.qualities);
+              logAll()
+          }
+          var qualitiesNotice = getQualitiesNoticePacket();
+          forwardToBrowsers(JSON.stringify(qualitiesNotice));
+          //forwardToSubscribers(JSON.stringify(qualitiesNotice));
+          break;
 
 				case 'config':
 					var configArray = json.data;
@@ -110,11 +110,12 @@ var onTextMessageReceived = function(message, webSocket) {
 					var height = json.height;
 					var encodeBps = json.encodeBps;
 					var frameRate = json.frameRate;
-                    currentQuality = width + "x" + height;
-                    if (VERBOSE) console.log("\nNew quality: "+currentQuality);
+          currentQuality = width + "x" + height;
+					currentBitrate = encodeBps;
+          if (VERBOSE) console.log("\nNew quality: "+currentQuality);
 
-                    var qualitiesNotice = getQualitiesNoticePacket();
-                    forwardToBrowsers(JSON.stringify(qualitiesNotice));
+          var qualitiesNotice = getQualitiesNoticePacket();
+          forwardToBrowsers(JSON.stringify(qualitiesNotice));
 
 					setConfigParams(configArray, width, height, encodeBps, frameRate);
 					var response = getConfigPacket();
@@ -124,7 +125,7 @@ var onTextMessageReceived = function(message, webSocket) {
 
 				case 'stream':
 					var response = message.utf8Data;
-                    if (VERBOSE) process.stdout.write('.')
+          if (VERBOSE) process.stdout.write('.');
 					//if (VERBOSE) process.stdout.write('['+json.data.length+'] ')
 					forwardToSubscribers(response);
 					break;

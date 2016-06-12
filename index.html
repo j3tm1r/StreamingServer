@@ -8,7 +8,8 @@
         <select id="sizesSelect"> </select>
         <select id="bitratesSelect"> </select>
         <h3>Received message</h3>
-        <p id="log">Log</p>
+        <p id="log"></p>
+				<p id="log2"></p>
     </body>
 </html>
 
@@ -19,6 +20,7 @@ var header = document.getElementById("header");
 var sizesSelect = document.getElementById("sizesSelect");
 var bitratesSelect = document.getElementById("bitratesSelect");
 var log = document.getElementById("log");
+var log2 = document.getElementById("log2");
 
 header.innerHTML = "Idle";
 
@@ -40,7 +42,7 @@ function disableSelectClickEvent(webSocket){
     });
 }
 
-var i=0
+var i=1, j=1;
 function forceQualityChange(ws){
     var str = sizesSelect.options[sizesSelect.selectedIndex].text;
     var res = str.split("x");
@@ -57,7 +59,7 @@ function forceQualityChange(ws){
         height: height,
         bitrate: currentBitrate
     }
-    log.innerHTML = "sent "+(i++);
+    log.innerHTML = "sent #"+(i++)+": "+JSON.stringify(obj);
     ws.send(JSON.stringify(obj));
 }
 
@@ -101,20 +103,20 @@ if ("WebSocket" in window){
               bitratesSelect.removeChild(bitratesSelect.firstChild);
           }
           var currentBitrate = received_msg.currentBitrate;
-          //disableSelectClickEvent(ws);
+
           received_msg.bitrates.forEach(function(element, index, array){
               var option = document.createElement("option");
               option.text = element;
               bitratesSelect.add(option);
-              if (option.innerHTML === currentBitrate){
+              if (option.innerHTML == currentBitrate){
                   bitratesSelect.selectedIndex = index;
               }
           });
-          //enableSelectClickEvent(ws);
+
       }
 
       //in any case, print incoming JSON messages content into the webpage
-      log.innerHTML = JSON.stringify(received_msg);
+      log2.innerHTML = "received #"+(j++)+": "+JSON.stringify(received_msg);
    };
 
    ws.onclose = function() {
