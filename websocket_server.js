@@ -167,8 +167,8 @@ var onTextMessageReceived = function(message, webSocket) {
 				case 'stream':
 					var response = message.utf8Data;
 					//console.log('seq num -> '+json.num);
-          			//if (VERBOSE) process.stdout.write('.');
-					forwardToSubscribers(response);
+        	if (VERBOSE) process.stdout.write('.');
+					//forwardToSubscribers(response);
 					break;
 
 				case 'reset':
@@ -235,6 +235,12 @@ var onTextMessageReceived = function(message, webSocket) {
 	}
 }
 
+function onBinaryMessageReceived(message, webSocket){
+		for (var i=0; i < subscribers.length; i++) {
+				subscribers[i].sendBytes(message.binaryData);
+		}
+}
+
 
 wsServer = new WebSocketServer({
     httpServer: server,
@@ -256,6 +262,7 @@ wsServer.on('request', function(request) {
     	else if (message.type === 'binary') {
 			/*console.log('Received' + message.binaryData.length + 'bytes');
 			*/
+			onBinaryMessageReceived(message, connection);
 		}
     });
     connection.on('close', function(reasonCode, description) {
