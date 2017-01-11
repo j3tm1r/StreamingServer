@@ -1,3 +1,4 @@
+"use strict";
 var http = require('http');
 var WebSocketServer = require('websocket').server;
 var url = require('url')
@@ -349,7 +350,7 @@ function onBinaryMessageReceived(message, webSocket){
 }
 
 
-wsServer = new WebSocketServer({
+var wsServer = new WebSocketServer({
   httpServer: server,
   autoAcceptConnections: false
 });
