@@ -160,6 +160,7 @@ var httpServerCallback = function(request, response) {
             resetMessage['type'] = 'reset';
             console.log('RESET message: '+resetMessage);
             forwardToStreamer(JSON.stringify(resetMessage));
+	    forwardToSubscribers(JSON.stringify(resetMessage));
           }
         }
 
