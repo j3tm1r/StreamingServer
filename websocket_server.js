@@ -162,6 +162,7 @@ var httpServerCallback = function(request, response) {
             console.log('RESET message: '+resetMessage);
             forwardToSubscribers(JSON.stringify(resetMessage));
             forwardToStreamer(JSON.stringify(resetMessage));
+	    forwardToSubscribers(JSON.stringify(resetMessage));
           }
         }
 
