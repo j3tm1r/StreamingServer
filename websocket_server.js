@@ -158,7 +158,9 @@ var httpServerCallback = function(request, response) {
             console.log('Triggered change to params: ' + JSON.stringify(targetParams));
             var resetMessage = buildParamsObj(targetParams.width, targetParams.height, targetParams.bitrate);
             resetMessage['type'] = 'reset';
+            resetMessage['quality'] = bitrateValue;
             console.log('RESET message: '+resetMessage);
+            forwardToSubscribers(JSON.stringify(resetMessage));
             forwardToStreamer(JSON.stringify(resetMessage));
           }
         }
